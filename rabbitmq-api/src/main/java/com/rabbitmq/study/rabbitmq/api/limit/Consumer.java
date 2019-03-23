@@ -7,6 +7,9 @@ import com.rabbitmq.study.rabbitmq.api.untils.ConnectionUtil;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * 消费端限流
+ */
 public class Consumer {
 
     static String EXCHANGE_NAME = "test.qos.exchange";
