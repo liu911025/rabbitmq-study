@@ -29,7 +29,9 @@ public class ConnectionUtil {
     }
 
     public static Connection getConnection() throws IOException, TimeoutException {
-        return getConnectionFactory().newConnection();
+        Connection connection = getConnectionFactory().newConnection();
+        System.out.println("获取连接成功!");
+        return connection;
     }
 
 }
