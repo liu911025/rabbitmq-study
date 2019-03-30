@@ -3,15 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.14.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.rabbitmq.study</groupId>
+        <artifactId>rabbitmq-study</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>com.rabbitmq.study</groupId>
-    <artifactId>rabbitmq-study</artifactId>
+    <groupId>com.rabbitmq.study.spring</groupId>
+    <artifactId>rabbitmq-spring</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>rabbitmq-study</name>
+    <name>rabbitmq-spring</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -21,13 +20,29 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- 引入mq依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>3.6.5</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>4.1.0</version>
         </dependency>
     </dependencies>
 
