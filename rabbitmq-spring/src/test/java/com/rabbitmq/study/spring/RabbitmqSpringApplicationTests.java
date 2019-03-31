@@ -2,13 +2,16 @@ package com.rabbitmq.study.spring;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -67,5 +70,41 @@ public class RabbitmqSpringApplicationTests {
 
         //清空队列数据
         rabbitAdmin.purgeQueue(TOPIC_QUEUE, false);
+    }
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Test
+    public void rabbitTemplateSendMessage() {
+        MessageProperties messageProperties = new MessageProperties();
+        Map<String, Object> headers = messageProperties.getHeaders();
+        headers.put("desc", "aisinilehaha");
+        headers.put("type", "hehe");
+
+        String msg = "jsghkjsdfhkfsjdh kjhf sdkjhfd jkh";
+        Message message = new Message(msg.getBytes(), messageProperties);
+
+        rabbitTemplate.convertAndSend("topic001", "spring.amqp", message, new MessagePostProcessor() {
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                System.out.println("-------消息添加额外信息------");
+                Map<String, Object> map = message.getMessageProperties().getHeaders();
+                map.put("attr", "多余的");
+                return message;
+            }
+        });
+    }
+
+    @Test
+    public void rabbitTemplateSendMessage2() {
+        MessageProperties messageProperties = new MessageProperties();
+        messageProperties.setContentType("text/plain");
+        String msg = "mq消息1234";
+        Message message = new Message(msg.getBytes(), messageProperties);
+        rabbitTemplate.send("topic001", "spring.q", message);
+
+        rabbitTemplate.convertAndSend("topic001", "spring.amqp", "hello object message send!");
+        rabbitTemplate.convertAndSend("topic002", "rabbit.abc", "hello object message send!");
     }
 }
