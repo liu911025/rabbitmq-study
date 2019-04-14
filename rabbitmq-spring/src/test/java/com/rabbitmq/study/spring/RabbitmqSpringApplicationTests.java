@@ -107,4 +107,23 @@ public class RabbitmqSpringApplicationTests {
         rabbitTemplate.convertAndSend("topic001", "spring.amqp", "hello object message send topic001!");
         rabbitTemplate.convertAndSend("topic002", "rabbit.abc", "hello object message send topic002! ");
     }
+
+    @Test
+    public void rabbitTemplateSendMessage3() {
+        MessageProperties messageProperties = new MessageProperties();
+        messageProperties.setContentType("text/plain");
+        String msg = "mq消息1234";
+        Message message = new Message(msg.getBytes(), messageProperties);
+        //rabbitTemplate.send("topic001", "spring.q", message);
+        rabbitTemplate.convertAndSend("topic001", "spring.q", message, new MessagePostProcessor() {
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                System.out.println("-----------------------添加额外设置------------------------------");
+                MessageProperties properties = message.getMessageProperties();
+                properties.getHeaders().put("dec", "aisilehaha");
+                properties.getHeaders().put("attr", "add attr");
+                return message;
+            }
+        });
+    }
 }
