@@ -104,7 +104,7 @@ public class RabbitmqSpringApplicationTests {
         Message message = new Message(msg.getBytes(), messageProperties);
         rabbitTemplate.send("topic001", "spring.q", message);
 
-        rabbitTemplate.convertAndSend("topic001", "spring.amqp", "hello object message send!");
-        rabbitTemplate.convertAndSend("topic002", "rabbit.abc", "hello object message send!");
+        rabbitTemplate.convertAndSend("topic001", "spring.amqp", "hello object message send topic001!");
+        rabbitTemplate.convertAndSend("topic002", "rabbit.abc", "hello object message send topic002! ");
     }
 }
