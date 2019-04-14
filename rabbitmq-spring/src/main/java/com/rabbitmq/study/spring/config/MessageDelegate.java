@@ -18,4 +18,11 @@ public class MessageDelegate {
         System.err.println("MessageListenerAdapter consumerMessage String 方法消息内容: " + body);
     }
 
+    public void method1(String body){
+        System.err.println("MessageListenerAdapter method1 String 方法消息内容: " + body);
+    }
+
+    public void method2(String body){
+        System.err.println("MessageListenerAdapter method2 String 方法消息内容: " + body);
+    }
 }

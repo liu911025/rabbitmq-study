@@ -18,6 +18,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Configuration
@@ -67,18 +69,31 @@ public class RabbitMQConfig {
             }
         });
 
-        /*//一.消息监听
+        /*
+        //一.消息监听
         container.setMessageListener(new ChannelAwareMessageListener() {
             @Override
             public void onMessage(Message message, Channel channel) throws Exception {
                 System.err.println("MessageListener: " + new String(message.getBody()));
             }
-        });*/
+        });
+        */
 
+        /*
         //二.消息适配
         MessageListenerAdapter adapter = new MessageListenerAdapter(new MessageDelegate());
         //adapter.setDefaultListenerMethod("consumerMessage");    //修改默认方法名
         adapter.setDefaultListenerMethod("consumerMessageString");    //修改默认方法名
+        //MessageListenerAdapter默认方法参数为byte,需要将类型转换
+        adapter.setMessageConverter(new TextMessageConverter());
+        */
+
+        //三.根据队列名反射对应的方法
+        MessageListenerAdapter adapter = new MessageListenerAdapter(new MessageDelegate());
+        Map<String, String> queueOrTagToMethodName = new HashMap<>();
+        queueOrTagToMethodName.put(queueConfig.queue001().getName(), "method1");
+        queueOrTagToMethodName.put(queueConfig.queue002().getName(), "method2");
+        adapter.setQueueOrTagToMethodName(queueOrTagToMethodName);
 
         //MessageListenerAdapter默认方法参数为byte,需要将类型转换
         adapter.setMessageConverter(new TextMessageConverter());

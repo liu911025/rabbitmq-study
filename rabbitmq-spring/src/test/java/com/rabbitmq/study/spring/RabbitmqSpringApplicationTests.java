@@ -126,4 +126,16 @@ public class RabbitmqSpringApplicationTests {
             }
         });
     }
+
+
+    @Test
+    public void rabbitTemplateSendMessage4() {
+        MessageProperties messageProperties = new MessageProperties();
+        messageProperties.setContentType("text/plain");
+        String msg = "mq消息1234";
+        Message message = new Message(msg.getBytes(), messageProperties);
+        rabbitTemplate.convertAndSend("topic001", "spring.q", message);
+
+        rabbitTemplate.convertAndSend("topic002", "rabbit.q", message);
+    }
 }
