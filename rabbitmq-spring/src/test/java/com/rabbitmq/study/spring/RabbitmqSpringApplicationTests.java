@@ -1,5 +1,7 @@
 package com.rabbitmq.study.spring;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.study.spring.entity.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.amqp.AmqpException;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -137,5 +141,60 @@ public class RabbitmqSpringApplicationTests {
         rabbitTemplate.convertAndSend("topic001", "spring.q", message);
 
         rabbitTemplate.convertAndSend("topic002", "rabbit.q", message);
+    }
+
+    @Test
+    public void testSendJsonMessage() throws Exception {
+
+        Order order = new Order();
+        order.setId("001");
+        order.setName("消息订单");
+        order.setContent("描述信息");
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(order);
+        System.err.println("order 4 json: " + json);
+
+        MessageProperties messageProperties = new MessageProperties();
+        //这里注意一定要修改contentType为 application/json
+        messageProperties.setContentType("application/json");
+        Message message = new Message(json.getBytes(), messageProperties);
+
+        rabbitTemplate.send("topic001", "spring.order", message);
+    }
+
+    @Test
+    public void testSendJavaMessage() throws Exception {
+
+        Order order = new Order();
+        order.setId("001");
+        order.setName("订单消息");
+        order.setContent("订单描述信息");
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(order);
+        System.err.println("order 4 json: " + json);
+
+        MessageProperties messageProperties = new MessageProperties();
+        //这里注意一定要修改contentType为 application/json
+        messageProperties.setContentType("application/json");
+        messageProperties.getHeaders().put("__TypeId__", "com.rabbitmq.study.spring.entity.Order");
+        Message message = new Message(json.getBytes(), messageProperties);
+
+        rabbitTemplate.send("topic001", "spring.order", message);
+    }
+
+    @Test
+    public void testSendExtConverterMessage() throws Exception {
+//			byte[] body = Files.readAllBytes(Paths.get("d:/002_books", "picture.png"));
+//			MessageProperties messageProperties = new MessageProperties();
+//			messageProperties.setContentType("image/png");
+//			messageProperties.getHeaders().put("extName", "png");
+//			Message message = new Message(body, messageProperties);
+//			rabbitTemplate.send("", "image_queue", message);
+
+        byte[] body = Files.readAllBytes(Paths.get("d:\\", "mysql.pdf"));
+        MessageProperties messageProperties = new MessageProperties();
+        messageProperties.setContentType("application/pdf");
+        Message message = new Message(body, messageProperties);
+        rabbitTemplate.send("", "pdf_queue", message);
     }
 }
