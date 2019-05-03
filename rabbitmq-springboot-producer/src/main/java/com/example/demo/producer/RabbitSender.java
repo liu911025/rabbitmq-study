@@ -1,5 +1,6 @@
 package com.example.demo.producer;
 
+import com.study.rabbitmq.pojo.Order;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate.ConfirmCallback;
 import org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnCallback;
@@ -11,6 +12,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Random;
 
 @Component
 public class RabbitSender {
@@ -50,5 +52,14 @@ public class RabbitSender {
         rabbitTemplate.convertAndSend("exchange-1", "springboot.abc", msg, correlationData);
         /*org.springframework.amqp.core.Message message1 = new org.springframework.amqp.core.Message(((String)message).getBytes(), null);
         rabbitTemplate.send("exchange-1", "springboot.abc", message1);*/
+    }
+
+    public void send(Order order) {
+        int id = new Random().nextInt(Integer.MAX_VALUE);
+        //id + 时间戳 全局唯一
+        CorrelationData correlationData = new CorrelationData(String.valueOf(id));
+        rabbitTemplate.setConfirmCallback(confirmCallback);
+        rabbitTemplate.setReturnCallback(returnCallback);
+        rabbitTemplate.convertAndSend("exchange-2", "springboot.order", order, correlationData);
     }
 }

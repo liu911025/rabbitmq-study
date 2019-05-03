@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.producer.RabbitSender;
+import com.study.rabbitmq.pojo.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,11 @@ public class DemoApplicationTests {
 		properties.put("number", "12345");
 		properties.put("send_time", simpleDateFormat.format(new Date()));
 		rabbitSender.send("Hello RabbitMQ For Spring Boot!", properties);
+	}
+
+	@Test
+	public void testSender2() throws Exception {
+		Order order = new Order(21, "iphone", "手机");
+		rabbitSender.send(order);
 	}
 }
